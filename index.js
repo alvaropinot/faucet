@@ -3,6 +3,8 @@ var duplexer = require('duplexer');
 var parser = require('tap-parser');
 var sprintf = require('sprintf');
 
+var DEFAULT_TEST_NAME = 'test';
+
 module.exports = function (opts) {
     if (!opts) opts = {};
     var tap = parser();
@@ -34,8 +36,10 @@ module.exports = function (opts) {
         var ok = res.ok ? 'ok' : 'not ok';
         var c = res.ok ? 32 : 31;
         if (!test) {
+            // Whenenver there is no test name, provide a default one.
+            var name = res.name || DEFAULT_TEST_NAME
             // mocha produces TAP results this way, whatever
-            var s = trim(res.name.trim());
+            var s = trim(name.trim());
             out.push(sprintf(
                 '\x1b[1m\x1b[' + c + 'm%s\x1b[0m\n',
                 trim((res.ok ? '✓' : '⨯') + ' ' +  s)
